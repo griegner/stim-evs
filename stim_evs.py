@@ -3,10 +3,7 @@ from numpy import diff
 from scipy.signal import find_peaks
 import glob
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('macosx')
 plt.rcParams["figure.figsize"] = (10, 4)
-
 
 def read_data(file):
     # load column 0
@@ -52,9 +49,7 @@ def events(xs, ys):
 
 
 def find_nearest(array, *args):
-    idx_list = []
-    [idx_list.append((np.abs(array-arg)).argmin()) for arg in args]
-    return idx_list
+    return [np.abs(array-arg).argmin() for arg in args]
 
 
 def main():
