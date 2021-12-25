@@ -5,8 +5,6 @@
 
 finds local maxima/minima of the second derivative temperature trace
 
-<img src='ex1.png' width='1000'>
-<br>
-<img src='ex2.png' width='1000'>
+![](ex_fig.png)
 
-**to run**: `$ stim_evs.py -h`
+**to run**: `$ python stim_evs.py --help`
