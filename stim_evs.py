@@ -56,7 +56,7 @@ def plot(df, active, deriv, evs, axs):
     # adjust plot
     for ax in axs: 
         sns.despine(ax=ax, bottom=True)
-        # ax.set_yticks([])
+        ax.set_yticks([])
         
     axs[0].set_ylabel('°C')
     axs[1].set_ylabel('f″(x)')

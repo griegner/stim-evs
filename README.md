@@ -3,7 +3,8 @@
 
 [scipy function: find_peaks](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html) 
 
-finds local maxima/minima of the second derivative temperature trace
+finds local maxima/minima of the second derivative temperature trace  
+`_events.tsv` outputs follow the [BIDs specification](https://bids-specification.readthedocs.io/en/stable/) for task events
 
 ![](ex_fig.png)
 
