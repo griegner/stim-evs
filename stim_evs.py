@@ -10,22 +10,22 @@ def get_args():
     parser = argparse.ArgumentParser(description='input thermal stimulator recordings, outputs event timings for each heat plateau')
     parser.add_argument('path', type=Path, help='path to TCS temperature recording (csv file)')
     parser.add_argument('sub', type=str, help='subject ID (ex c000)')
-    parser.add_argument('ses', type=int, help='scanning session (ex 1,2,..)')
-    parser.add_argument('task', type=str, help='manipulation (pre or post)')
-    parser.add_argument('event', type=str, help='stimuli (ex 48C)')
+    parser.add_argument('ses', type=int, help='scanning session (ex 1,2..)')
+    parser.add_argument('task', type=str, help='manipulation-stimuli (ex pre48C)')
+    parser.add_argument('--adjust_onsets', type=float, default=0, help='seconds to subtract from onset times')
     args = parser.parse_args()
 
     f_in = Path(args.path)
     assert f_in.is_file(), 'file does not exist'
 
-    f_out = f'{f_in.parent}/sub-{args.sub}_ses-{args.ses}_task-{args.task}_event-{args.event}_events'
-    return f_in, f_out+'.tsv', f_out+'.png'
+    f_out = f'{f_in.parent}/sub-{args.sub}_ses-{args.ses}_task-{args.task}_events'
+    return f_in, f_out+'.tsv', f_out+'.png', args.adjust_onsets
 
-def get_data(csv):
+def get_data(csv, adjust_onsets):
     zones = [f'zone{i}' for i in range(5)]
     df = pd.read_csv(csv, names=['time (sec)', 'step', 'stim'] + zones, index_col=0)
     df = df.loc[df.stim == 'STIMULATE', zones]
-    return df.set_index(df.index - df.index[0])
+    return df.set_index(df.index - df.index[0] - adjust_onsets)
 
 def calc_deriv(df):
     mask = (df.max()-df.min()) > 10 # minimum Δ°C
@@ -59,6 +59,7 @@ def plot(df, active, deriv, evs, axs):
         ax.set_yticks([])
         
     axs[0].set_ylabel('°C')
+    axs[0].axvline(x=0, color='r', linestyle=':', lw=.6)
     axs[1].set_ylabel('f″(x)')
     axs[1].set_xticks(df.index[::100])
 
@@ -70,8 +71,8 @@ def evs_to_bids(evs):
 
 
 def main():
-    f_in, f_out, png = get_args()
-    df = get_data(f_in)
+    f_in, f_out, png, adjust_onsets = get_args()
+    df = get_data(f_in, adjust_onsets)
     active, deriv = calc_deriv(df)
     evs = calc_evs(active, deriv)
 
