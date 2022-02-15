@@ -19,7 +19,7 @@ def get_args():
     assert f_in.is_file(), 'file does not exist'
 
     f_out = f'{f_in.parent}/sub-{args.sub}_ses-{args.ses}_task-{args.task}_events'
-    return f_in, f_out+'.tsv', f_out+'.png', args.adjust_onsets
+    return f_in, f'{f_out}.tsv', f'{f_out}.png', args.adjust_onsets
 
 def get_data(csv, adjust_onsets):
     zones = [f'zone{i}' for i in range(5)]
@@ -29,7 +29,7 @@ def get_data(csv, adjust_onsets):
 
 def calc_deriv(df):
     mask = (df.max()-df.min()) > 10 # minimum Δ°C
-    active = df[mask.index[mask]].mean(axis=1)
+    active = df[mask.index[mask]].mean(axis=1)[5:] # ignore first 5sec
     deriv = active.diff(periods=5).diff(periods=5)
 
     return active, deriv
@@ -50,7 +50,7 @@ def calc_evs(active, deriv):
 def plot(df, active, deriv, evs, axs):
 
     active.plot(ax=axs[0], c='k', lw=.5)
-    axs[0].plot(evs.index, evs.values, 'ro', ms=1)
+    axs[0].plot(evs.index, evs.values, 'ro', ms=2)
     deriv.plot(ax=axs[1], c='k', lw=.5)
 
     # adjust plot
