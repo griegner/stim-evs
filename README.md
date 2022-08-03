@@ -6,6 +6,6 @@
 finds local maxima/minima of the second derivative temperature trace  
 `_events.tsv` outputs follow the [BIDs specification](https://bids-specification.readthedocs.io/en/stable/) for task events
 
-![](ex_fig.png)
+![](ex-fig.png)
 
 **to run**: `$ python stim_evs.py --help`
